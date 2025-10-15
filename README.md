@@ -43,7 +43,7 @@ The game will load, and you can start playing immediately.
 
 File Structure
 .
-├── spanish_game.html               # The main application file containing all HTML, CSS, and JS.
+├── index.html               # The main application file containing all HTML, CSS, and JS.
 ├── Acciones Habituales - Sheet1.csv  # Data file containing Spanish verbs and their English translations.
 └── README.md                       # This README file.
 

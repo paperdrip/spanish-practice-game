@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Spanish Verbs & Time Quiz</title>
+	<title>Spanish Practice Game</title>
 	<script src="https://cdn.tailwindcss.com"></script>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,18 +32,11 @@
 			border: 2px solid transparent;
 		}
 		.btn-primary {
-			background-color: #3b82f6;
+			background-color: #4f46e5;
 			color: white;
 		}
 		.btn-primary:hover {
-			background-color: #2563eb;
-		}
-		.btn-secondary {
-			background-color: #e5e7eb;
-			color: #1f2937;
-		}
-		.btn-secondary:hover {
-			background-color: #d1d5db;
+			background-color: #4338ca;
 		}
 		.btn-option {
 			background-color: #f3f4f6;
@@ -51,8 +44,8 @@
 			border-color: #e5e7eb;
 		}
 		.btn-option:hover {
-			border-color: #3b82f6;
-			background-color: #dbeafe;
+			border-color: #4f46e5;
+			background-color: #e0e7ff;
 		}
 		.btn-correct {
 			background-color: #22c55e !important;
@@ -75,16 +68,16 @@
 	<div id="app-container" class="w-full max-w-2xl mx-auto">
 		<!-- Welcome Screen -->
 		<div id="welcome-screen" class="card text-center">
-			<h1 class="text-4xl font-bold text-slate-900 mb-2">Spanish Quiz</h1>
-			<p class="text-slate-600 mb-8 text-lg">Test your knowledge of common verbs and time-telling.</p>
-			<p class="text-slate-500 mb-8">You'll answer 15 questions: 10 on verbs and 5 on time.</p>
+			<h1 class="text-4xl font-bold text-slate-900 mb-2">Spanish Practice Game</h1>
+			<p class="text-slate-600 mb-8 text-lg">Test your knowledge of common verbs, reflexive verbs, and telling time.</p>
+			<p class="text-slate-500 mb-8">You'll answer 20 questions.</p>
 			<button id="start-button" class="btn btn-primary w-full sm:w-auto sm:px-16 py-3 text-lg">Start Quiz</button>
 		</div>
 
 		<!-- Game Screen -->
 		<div id="game-screen" class="hidden">
 			<div class="card">
-				<div id="progress-container" class="text-center text-sm font-medium text-slate-500 mb-4">Question 1 of 15</div>
+				<div id="progress-container" class="text-center text-sm font-medium text-slate-500 mb-4"></div>
 				<div id="question-container" class="text-center text-2xl font-bold text-slate-900 mb-8 min-h-[72px]"></div>
 				<div id="answers-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
 				<div id="explanation-container" class="hidden bg-slate-50 p-4 rounded-xl text-center text-slate-700 mb-6"></div>
@@ -105,11 +98,9 @@
 		const welcomeScreen = document.getElementById('welcome-screen');
 		const gameScreen = document.getElementById('game-screen');
 		const summaryScreen = document.getElementById('summary-screen');
-
 		const startButton = document.getElementById('start-button');
 		const nextButton = document.getElementById('next-button');
 		const playAgainButton = document.getElementById('play-again-button');
-
 		const progressContainer = document.getElementById('progress-container');
 		const questionContainer = document.getElementById('question-container');
 		const answersContainer = document.getElementById('answers-container');
@@ -117,38 +108,29 @@
 		const scoreContainer = document.getElementById('score-container');
 		const summaryDetails = document.getElementById('summary-details');
 
-		const TOTAL_QUESTIONS = 15;
-		const VERB_QUESTIONS = 10;
-		const TIME_QUESTIONS = 5;
-
-		// Data from the provided sheet
-		const verbs = [
-			{ spanish: "despertarse / levantarse", english: "to wake up / to get up" },
-			{ spanish: "dormir / acostarse", english: "to sleep / to go to bed" },
-			{ spanish: "ducharse", english: "to shower" },
-			{ spanish: "lavarse los dientes", english: "to brush one's teeth" },
-			{ spanish: "trabajar", english: "to work" },
-			{ spanish: "vestirse", english: "to get dressed" },
-			{ spanish: "ver la tele", english: "to watch TV" },
-			{ spanish: "desayunar", english: "to have breakfast" },
-			{ spanish: "comer / almorzar", english: "to eat / to have lunch" },
-			{ spanish: "cenar", english: "to have dinner" },
-			{ spanish: "hacer deporte", english: "to do exercise/sports" },
-			{ spanish: "limpiar", english: "to clean" },
-			{ spanish: "estudiar", english: "to study" },
-			{ spanish: "cocinar", english: "to cook" },
-			{ spanish: "hacer la compra", english: "to do the shopping/groceries" },
-			{ spanish: "pasear", english: "to stroll/walk" },
-			{ spanish: "sacar/pasear al perro", english: "to take out/walk the dog" },
-			{ spanish: "coger/tomar el autobús", english: "to take the bus" },
-			{ spanish: "estar con el móvil", english: "to be on one's phone" },
-			{ spanish: "maquillarse", english: "to put on makeup" },
-			{ spanish: "quedar con amigo/as", english: "to meet up with friends" },
-			{ spanish: "salir de casa", english: "to leave the house" },
-			{ spanish: "volver a casa", english: "to return home" },
-			{ spanish: "descansar", english: "to rest" }
+		// --- GAME CONFIG ---
+		const TOTAL_QUESTIONS = 20;
+		const VERB_QUESTIONS_COUNT = 10;
+		const TIME_QUESTIONS_COUNT = 5;
+		const REFLEXIVE_VERB_QUESTIONS_COUNT = 5;
+		const CSV_URL = 'acciones-habituales.csv';
+		
+		// --- REFLEXIVE VERB DATA ---
+		const REFLEXIVE_PRONOUNS = ['me', 'te', 'se', 'nos', 'os'];
+		const REFLEXIVE_VERBS = [
+			'despertarse', 'levantarse', 'acostarse', 'ducharse', 'lavarse', 
+			'vestirse', 'maquillarse', 'peinarse', 'sentarse', 'llamarse', 
+			'afeitarse', 'quedarse', 'irse'
+		];
+		const REFLEXIVE_SUBJECTS = [
+			{ pronoun: 'Yo', reflexive: 'me' }, { pronoun: 'Tú', reflexive: 'te' },
+			{ pronoun: 'Él', reflexive: 'se' }, { pronoun: 'Ella', reflexive: 'se' },
+			{ pronoun: 'Usted', reflexive: 'se' }, { pronoun: 'Nosotros', reflexive: 'nos' },
+			{ pronoun: 'Vosotros', reflexive: 'os' }, { pronoun: 'Ellos', reflexive: 'se' },
+			{ pronoun: 'Ellas', reflexive: 'se' }, { pronoun: 'Ustedes', reflexive: 'se' },
 		];
 
+		let verbList = [];
 		let questions = [];
 		let currentQuestionIndex = 0;
 		let score = 0;
@@ -162,118 +144,167 @@
 			}
 			return array;
 		}
-		
-		const numberToSpanish = {
-			 1: 'una', 2: 'dos', 3: 'tres', 4: 'cuatro', 5: 'cinco', 6: 'seis', 7: 'siete', 8: 'ocho', 9: 'nueve', 10: 'diez',
-			 11: 'once', 12: 'doce', 13: 'trece', 14: 'catorce', 15: 'quince', 20: 'veinte', 25: 'veinticinco'
-		};
+
+		function getRandomElement(array, exclude = null) {
+			let element;
+			do {
+				element = array[Math.floor(Math.random() * array.length)];
+			} while (exclude && (element.spanish === exclude.spanish));
+			return element;
+		}
+
+		// --- DATA LOADING ---
+		function parseCSV(csvText) {
+			const lines = csvText.split('\n').slice(1);
+			return lines.map(line => {
+				const [spanish, english] = line.split(',');
+				return { spanish: spanish.trim().replace(/"/g, ''), english: english.trim().replace(/"/g, '') };
+			}).filter(v => v.spanish && v.english);
+		}
+
+		async function loadVerbs() {
+			try {
+				const response = await fetch(CSV_URL);
+				const csvText = await response.text();
+				verbList = parseCSV(csvText);
+			} catch (error) {
+				console.error("Failed to load verb list:", error);
+				// Fallback verbs
+				verbList = [
+					{ spanish: 'trabajar', english: 'to work' },
+					{ spanish: 'estudiar', english: 'to study' },
+					{ spanish: 'comer', english: 'to eat' },
+					{ spanish: 'vivir', english: 'to live' },
+					{ spanish: 'hablar', english: 'to speak' },
+					{ spanish: 'aprender', english: 'to learn' },
+					{ spanish: 'escribir', english: 'to write' },
+					{ spanish: 'leer', english: 'to read' },
+					{ spanish: 'beber', english: 'to drink' },
+					{ spanish: 'correr', english: 'to run' }
+				];
+			}
+		}
 
 		// --- QUESTION GENERATION ---
-		function generateVerbQuestions() {
-			const shuffledVerbs = shuffleArray([...verbs]);
-			const selectedVerbs = shuffledVerbs.slice(0, VERB_QUESTIONS);
-			const verbQuestions = [];
-
-			selectedVerbs.forEach(verb => {
-				const isSpanishToEnglish = Math.random() > 0.5;
-				const questionText = isSpanishToEnglish ? `What is the meaning of <strong>"${verb.spanish}"</strong>?` : `Which verb means <strong>"${verb.english}"</strong>?`;
-				const correctAnswer = isSpanishToEnglish ? verb.english : verb.spanish;
+		function generateVerbQuestions(count) {
+			const questions = [];
+			const usedIndices = new Set();
+			while (questions.length < count && usedIndices.size < verbList.length) {
+				const randomIndex = Math.floor(Math.random() * verbList.length);
+				if (usedIndices.has(randomIndex)) continue;
 				
-				const distractors = shuffledVerbs
-					.filter(v => v.spanish !== verb.spanish)
-					.slice(0, 3)
-					.map(v => isSpanishToEnglish ? v.english : v.spanish);
-
-				const options = shuffleArray([correctAnswer, ...distractors]);
-				
-				verbQuestions.push({
-					type: 'verb',
-					question: questionText,
-					options: options,
-					answer: correctAnswer,
-					explanation: `<strong>${verb.spanish}</strong> means <strong>${verb.english}</strong>.`
-				});
-			});
-			return verbQuestions;
-		}
-		
-		function formatTimeSpanish(h, m) {
-			const hour = (h % 12 === 0) ? 12 : h % 12;
-			let displayHour = hour;
-
-			if (m > 30) {
-				displayHour = (hour % 12) + 1;
-				 if (displayHour === 0) displayHour = 12;
-			}
-
-			const hourText = numberToSpanish[displayHour];
-			const verb = (displayHour === 1) ? 'Es la' : 'Son las';
-
-			if (m === 0) return `${verb} ${hourText} en punto`;
-			if (m === 15) return `${verb} ${hourText} y cuarto`;
-			if (m === 30) return `${verb} ${hourText} y media`;
-			if (m === 45) {
-				const nextHourText = numberToSpanish[(hour % 12) + 1];
-				return `Son las ${nextHourText} menos cuarto`;
-			}
-
-			if (m > 30) {
-				 const nextHourText = numberToSpanish[(hour % 12) + 1];
-				 return `Son las ${nextHourText} menos ${numberToSpanish[60 - m]}`;
-			}
-
-			return `${verb} ${hourText} y ${numberToSpanish[m]}`;
-		}
-
-		function generateTimeQuestions() {
-			const timeQuestions = [];
-			const usedTimes = new Set();
-			
-			const possibleMinutes = [0, 15, 30, 45, 5, 10, 20, 25];
-
-			while(timeQuestions.length < TIME_QUESTIONS) {
-				const h = Math.floor(Math.random() * 12) + 1;
-				const m_index = Math.floor(Math.random() * possibleMinutes.length);
-				const m = possibleMinutes[m_index];
-				
-				const timeKey = `${h}:${m}`;
-				if(usedTimes.has(timeKey)) continue;
-				usedTimes.add(timeKey);
-
-				const correctAnswerSpanish = formatTimeSpanish(h, m);
-				const correctAnswerEnglish = `${h}:${m < 10 ? '0' + m : m}`;
-
+				usedIndices.add(randomIndex);
+				const correctVerb = verbList[randomIndex];
 				const distractors = [];
 				while (distractors.length < 3) {
-					const dh = Math.floor(Math.random() * 12) + 1;
-					const dm_index = Math.floor(Math.random() * possibleMinutes.length);
-					const dm = possibleMinutes[dm_index];
-					const distractorTime = `${dh}:${dm < 10 ? '0' + dm : dm}`;
-					if (distractorTime !== correctAnswerEnglish && !distractors.includes(distractorTime)) {
-						distractors.push(distractorTime);
+					const randomDistractor = getRandomElement(verbList, correctVerb);
+					if (!distractors.some(d => d.spanish === randomDistractor.spanish)) {
+						 distractors.push(randomDistractor);
+					}
+				}
+
+				const fromSpanish = Math.random() > 0.5;
+				const options = shuffleArray([correctVerb, ...distractors]);
+				
+				questions.push({
+					question: fromSpanish ? `What does "<strong>${correctVerb.spanish}</strong>" mean?` : `How do you say "<strong>${correctVerb.english}</strong>"?`,
+					options: options.map(v => fromSpanish ? v.english : v.spanish),
+					answer: fromSpanish ? correctVerb.english : correctVerb.spanish,
+					explanation: `<strong>${correctVerb.spanish}</strong> means <strong>${correctVerb.english}</strong>.`
+				});
+			}
+			return questions;
+		}
+
+		function generateTimeQuestions(count) {
+			const questions = [];
+			const hoursEs = ["", "una", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce"];
+			
+			for (let i = 0; i < count; i++) {
+				const hour = Math.floor(Math.random() * 12) + 1;
+				const minute = Math.floor(Math.random() * 12) * 5;
+				
+				let timeEs = "";
+				if (minute === 0) {
+					timeEs = `${hour === 1 ? 'Es la' : 'Son las'} ${hoursEs[hour]}`;
+				} else if (minute <= 30) {
+					const yPart = minute === 15 ? 'y cuarto' : (minute === 30 ? 'y media' : `y ${minute}`);
+					timeEs = `${hour === 1 ? 'Es la' : 'Son las'} ${hoursEs[hour]} ${yPart}`;
+				} else { // minute > 30, the "menos" case
+					const nextHour = (hour % 12) + 1;
+					const article = nextHour === 1 ? 'Es la' : 'Son las';
+					const menosPart = minute === 45 ? 'menos cuarto' : `menos ${60 - minute}`;
+					timeEs = `${article} ${hoursEs[nextHour]} ${menosPart}`;
+				}
+
+				const timeEn = `${hour}:${minute.toString().padStart(2, '0')}`;
+				
+				const distractors = [];
+				while(distractors.length < 3) {
+					const dHour = Math.floor(Math.random() * 12) + 1;
+					const dMinute = Math.floor(Math.random() * 12) * 5;
+					const dTime = `${dHour}:${dMinute.toString().padStart(2, '0')}`;
+					if (dTime !== timeEn && !distractors.includes(dTime)) {
+						distractors.push(dTime);
 					}
 				}
 				
-				timeQuestions.push({
-					type: 'time',
-					question: `What time is <strong>"${correctAnswerSpanish}"</strong>?`,
-					options: shuffleArray([correctAnswerEnglish, ...distractors]),
-					answer: correctAnswerEnglish,
-					explanation: `<strong>${correctAnswerSpanish}</strong> is <strong>${correctAnswerEnglish}</strong>.`
+				questions.push({
+					question: `What time is "<strong>${timeEs}</strong>"?`,
+					options: shuffleArray([timeEn, ...distractors]),
+					answer: timeEn,
+					explanation: `<strong>${timeEs}</strong> is <strong>${timeEn}</strong>.`
 				});
 			}
-			return timeQuestions;
+			return questions;
+		}
+
+		function generateReflexiveVerbQuestions(count) {
+			const questions = [];
+			const usedCombinations = new Set();
+			while (questions.length < count) {
+				const verb = REFLEXIVE_VERBS[Math.floor(Math.random() * REFLEXIVE_VERBS.length)];
+				const subject = REFLEXIVE_SUBJECTS[Math.floor(Math.random() * REFLEXIVE_SUBJECTS.length)];
+				const combinationKey = `${subject.pronoun}-${verb}`;
+
+				if (usedCombinations.has(combinationKey)) continue;
+				usedCombinations.add(combinationKey);
+				
+				const isPronounQuestion = Math.random() > 0.5;
+				if (isPronounQuestion) {
+					questions.push({
+						question: `${subject.pronoun} _____ (${verb}) temprano.`,
+						options: shuffleArray([...REFLEXIVE_PRONOUNS]),
+						answer: subject.reflexive,
+						explanation: `For '<strong>${subject.pronoun}</strong>', the pronoun is '<strong>${subject.reflexive}</strong>'.`
+					});
+				} else {
+					const distractors = shuffleArray(REFLEXIVE_VERBS.filter(v => v !== verb)).slice(0, 3);
+					questions.push({
+						question: `${subject.pronoun} ${subject.reflexive} _____ temprano.`,
+						options: shuffleArray([verb, ...distractors]),
+						answer: verb,
+						explanation: `'<strong>${subject.pronoun} ${subject.reflexive}</strong>' matches '<strong>${verb}</strong>'.`
+					});
+				}
+			}
+			return questions;
 		}
 
 		// --- GAME FLOW ---
-		function startGame() {
+		async function startGame() {
 			currentQuestionIndex = 0;
 			score = 0;
 			userAnswers = [];
 			
-			const vq = generateVerbQuestions();
-			const tq = generateTimeQuestions();
-			questions = shuffleArray([...vq, ...tq]);
+			if (verbList.length === 0) {
+				await loadVerbs();
+			}
+
+			const verbQuestions = generateVerbQuestions(VERB_QUESTIONS_COUNT);
+			const timeQuestions = generateTimeQuestions(TIME_QUESTIONS_COUNT);
+			const reflexiveQuestions = generateReflexiveVerbQuestions(REFLEXIVE_VERB_QUESTIONS_COUNT);
+			questions = shuffleArray([...verbQuestions, ...timeQuestions, ...reflexiveQuestions]);
 
 			welcomeScreen.classList.add('hidden');
 			summaryScreen.classList.add('hidden');
@@ -283,18 +314,17 @@
 		}
 
 		function displayQuestion() {
-			// Reset UI
 			explanationContainer.classList.add('hidden');
 			nextButton.classList.add('hidden');
 			answersContainer.innerHTML = '';
 
 			const question = questions[currentQuestionIndex];
 			progressContainer.textContent = `Question ${currentQuestionIndex + 1} of ${TOTAL_QUESTIONS}`;
-			questionContainer.innerHTML = question.question;
+			questionContainer.innerHTML = question.question.replace('_____', '<span class="text-indigo-600 font-mono">____</span>');
 
 			question.options.forEach(option => {
 				const button = document.createElement('button');
-				button.innerHTML = option;
+				button.textContent = option;
 				button.classList.add('btn', 'btn-option');
 				button.addEventListener('click', selectAnswer);
 				answersContainer.appendChild(button);
@@ -303,13 +333,11 @@
 
 		function selectAnswer(e) {
 			const selectedButton = e.target;
-			const selectedAnswer = selectedButton.innerHTML;
+			const selectedAnswer = selectedButton.textContent;
 			const currentQuestion = questions[currentQuestionIndex];
 			const isCorrect = selectedAnswer === currentQuestion.answer;
 			
-			if (isCorrect) {
-				score++;
-			}
+			if (isCorrect) score++;
 			
 			userAnswers.push({
 				question: currentQuestion.question,
@@ -318,13 +346,12 @@
 				isCorrect: isCorrect,
 			});
 
-			// Provide visual feedback
 			Array.from(answersContainer.children).forEach(button => {
 				button.removeEventListener('click', selectAnswer);
 				button.classList.add('btn-disabled');
-				if (button.innerHTML === currentQuestion.answer) {
+				if (button.textContent === currentQuestion.answer) {
 					button.classList.add('btn-correct');
-				} else if (button.innerHTML === selectedAnswer) {
+				} else if (button.textContent === selectedAnswer) {
 					button.classList.add('btn-incorrect');
 				}
 			});
@@ -346,10 +373,9 @@
 		function showSummary() {
 			gameScreen.classList.add('hidden');
 			summaryScreen.classList.remove('hidden');
-
 			scoreContainer.textContent = `You scored ${score} out of ${TOTAL_QUESTIONS}!`;
-
 			summaryDetails.innerHTML = '';
+
 			userAnswers.forEach(answer => {
 				const resultEl = document.createElement('div');
 				resultEl.className = 'p-4 rounded-lg';
@@ -357,12 +383,17 @@
 				resultEl.style.borderColor = answer.isCorrect ? '#bbf7d0' : '#fecaca';
 				resultEl.style.borderWidth = '1px';
 				
+				let questionText = answer.question;
+				if(questionText.includes('_____')){
+					 questionText = answer.question.replace('_____', `<strong class="font-bold ${answer.isCorrect ? 'text-green-700' : 'text-red-700'}">${answer.selected}</strong>`);
+				}
+			   
 				resultEl.innerHTML = `
-					<p class="font-semibold text-slate-800">${answer.question}</p>
+					<p class="font-semibold text-slate-800">${questionText}</p>
 					<p class="mt-2 ${answer.isCorrect ? 'text-green-700' : 'text-red-700'}">
 					   ${answer.isCorrect ? '✓' : '✗'} Your answer: ${answer.selected}
 					</p>
-					${!answer.isCorrect ? `<p class="mt-1 text-slate-600">Correct answer: ${answer.correct}</p>` : ''}
+					${!answer.isCorrect ? `<p class="mt-1 text-slate-600">Correct answer: <strong>${answer.correct}</strong></p>` : ''}
 				`;
 				summaryDetails.appendChild(resultEl);
 			});
@@ -375,3 +406,4 @@
 	</script>
 </body>
 </html>
+

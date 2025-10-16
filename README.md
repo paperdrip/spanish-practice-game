@@ -32,13 +32,13 @@ This project is self-contained and does not require a web server or complex setu
 
 - A modern web browser (like Chrome, Firefox, Safari, or Edge).
 
-- The Acciones Habituales - Sheet1.csv file must be in the same directory as the main HTML file.
+- The acciones-habituales.csv file must be in the same directory as the main HTML file.
 
 ### Steps
 
 1. Clone or download the repository to your local machine.
 
-2. Ensure the file Acciones Habituales - Sheet1.csv is present in the root directory.
+2. Ensure the file acciones-habituales.csv is present in the root directory.
 
 3. Open the spanish_game.html file directly in your web browser.
 
@@ -49,7 +49,7 @@ This project is self-contained and does not require a web server or complex setu
 ```
 .
 ├── index.html               # The main application file containing all HTML, CSS, and JS.
-├── Acciones Habituales - Sheet1.csv  # Data file containing Spanish verbs and their English translations.
+├── acciones-habituales.csv  # Data file containing Spanish verbs and their English translations.
 └── README.md                       # This README file.
 ```
 

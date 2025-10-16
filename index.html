@@ -155,10 +155,20 @@
 
 		// --- DATA LOADING ---
 		function parseCSV(csvText) {
-			const lines = csvText.split('\n').slice(1);
+			const lines = csvText.trim().split('\n').slice(1); // Skip header
 			return lines.map(line => {
-				const [spanish, english] = line.split(',');
-				return { spanish: spanish.trim().replace(/"/g, ''), english: english.trim().replace(/"/g, '') };
+				// Regex to match CSV fields (handles quotes with commas inside)
+				const regex = /(?:,|^)(?:"([^"]*)"|([^",]*))/g;
+				const fields = [];
+				let match;
+				while ((match = regex.exec(line)) !== null) {
+					fields.push(match[1] !== undefined ? match[1] : match[2]);
+				}
+				
+				return { 
+					spanish: fields[0]?.trim() || '', 
+					english: fields[1]?.trim() || '' 
+				};
 			}).filter(v => v.spanish && v.english);
 		}
 
